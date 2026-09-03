@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>S.O.S ADOLESCENTES</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: linear-gradient(135deg, #e0f7fa 0%, #e8f5e9 100%); font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; text-align: center; color: #01579b; }
+    h1 { color: #0277bd; margin-bottom: 10px; font-size: 32px; }
+   .banner { background: linear-gradient(135deg, #4fc3f7 0%, #26c6da 100%); color: white; padding: 25px; border-radius: 15px; margin: 20px 0; }
+   .test,.quiz,.inicio,.panel-profe { background: white; margin: 15px auto; padding: 25px; border-radius: 12px; max-width: 650px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); text-align: left; border-top: 4px solid #4caf50; }
+   .pregunta { margin: 15px 0; }
+   .pregunta label { display: block; margin: 8px 0; cursor: pointer; }
+    button { background: linear-gradient(135deg, #26a69a 0%, #26c6da 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; margin: 10px 5px; font-weight: bold; font-size: 16px; }
+    button:hover { background: linear-gradient(135deg, #00838f 0%, #0097a7 100%); }
+    button.sec { background: #78909c; }
+    #resultado { margin-top: 15px; font-weight: bold; font-size: 20px; color: #0277bd; }
+   .oculto { display: none; }
+    textarea { width: 100%; height: 120px; padding: 12px; border-radius: 8px; border: 2px solid #81d4fa; margin: 10px 0; font-size: 15px; }
+   .mensaje { background: #e8f5e9; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #4caf50; color: #1b5e20; }
+   .mensaje-seguro { background: #e1f5fe; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #29b6f6; color: #01579b; }
+   .alerta { background: #ffebee; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #e53935; color: #b71c1c; }
+   .consejo { background: #fff3e0; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 5px solid #fb8c00; color: #e65100; }
+    input[type="text"], input[type="number"], input[type="password"] { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #81d4fa; margin: 8px 0; font-size: 16px; }
+   .logo { font-size: 40px; margin-bottom: 5px; cursor: pointer; user-select: none; }
+   .entrada-card { background: #f5f5f5; padding: 10px; border-radius: 8px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <div class="logo" id="logo" onclick="contadorLogo()">💙</div>
+  <h1>S.O.S ADOLESCENTES</h1>
+
+  <div class="inicio" id="inicio">
+    <h2>Bienvenida a tu espacio seguro 👋</h2>
+    <div class="mensaje-seguro">
+      <b>💚 Aquí estás segura</b><br>
+      Este es un lugar para ti. Puedes decir lo que sientes sin miedo.
+    </div>
+    <input type="text" id="apodo" placeholder="Dime cómo te gustaría que te llame">
+    <input type="number" id="edad" placeholder="Tu edad" min="10" max="20">
+    <button onclick="entrar()">Entrar</button>
+  </div>
+
+  <div class="oculto" id="contenido">
+    <h2>Hola <span id="nombreUsuario"></span> 💙</h2>
+
+    <div class="banner">
+      <h3>Cuéntame cómo te sientes hoy</h3>
+      <p style="font-size:14px;">Recuerda: <b>Aquí puedes ser 100% honesta</b>. Te voy a escuchar.</p>
+      <textarea id="entrada" placeholder="Escribe aquí lo que sientes... Lo que te preocupa, lo que te hace feliz, todo."></textarea>
+      <button onclick="analizarTexto()">Enviar</button>
+      <div id="mensajeMotivador"></div>
+
+      <input type="text" id="buscar" placeholder="Buscar en lo que escribiste antes">
+      <button onclick="buscarTexto()">Buscar</button>
+      <div id="resultadosBusqueda"></div>
+    </div>
+
+    <div class="test" id="menu">
+      <h3 style="color:#0277bd;">Test de Ansiedad - 8 preguntas</h3><button onclick="iniciarTest('ansiedad')">Hacer Test</button>
+      <h3 style="color:#0277bd;">Test de Estrés - 8 preguntas</h3><button onclick="iniciarTest('estres')">Hacer Test</button>
+      <h3 style="color:#0277bd;">Test de Problemas Familiares - 8 preguntas</h3><button onclick="iniciarTest('familia')">Hacer Test</button>
+      <h3 style="color:#0277bd;">Test de Autoestima - 8 preguntas</h3><button onclick="iniciarTest('autoestima')">Hacer Test</button>
+    </div>
+    <div class="quiz oculto" id="quiz"></div>
+    <button class="sec" onclick="volverMenu()">Volver al menú</button>
+  </div>
+
+  <div class="oculto panel-profe" id="panelProfe">
+    <h2>Panel de Supervisión 🔒</h2>
+    <p>Ingresa la clave secreta para ver las entradas</p>
+    <input type="password" id="claveProfe" placeholder="Ingresa la clave">
+    <button onclick="verificarClave()">Entrar</button>
+    <div id="zonaProfe" class="oculto">
+      <button onclick="verTodasEntradas()">Ver todas las entradas</button>
+      <button onclick="borrarTodo()" style="background:#e53935;">Borrar todo</button>
+      <button class="sec" onclick="salirProfe()">Salir</button>
+      <div id="todasEntradas"></div>
+    </div>
+  </div>
+
+<script>
+let nombreUsuario = ""; let edadUsuario = "";
+let clicksLogo = 0;
+
+const CLAVE_SUPERVISORA = "s.o.s";
+
+// SOLO 8 PREGUNTAS POR TEST
+const preguntas = {
+  ansiedad: ["¿Te sientes nervioso/a la mayor parte del tiempo?","¿Tienes miedo de que algo malo vaya a pasar?","¿Te cuesta relajarte?","¿Sientes palpitaciones o el corazón acelerado?","¿Te preocupas demasiado por cosas pequeñas?","¿Evitas situaciones por miedo o nervios?","¿Te cuesta concentrarte por los nervios?","¿Tienes problemas para dormir por preocupaciones?"],
+  estres: ["¿Sientes que tienes mucho trabajo o tareas?","¿Duermes mal o poco por preocupaciones?","¿Te irritas con facilidad?","¿Sientes dolores de cabeza o tensión?","¿Sientes que no tienes tiempo para ti?","¿Te sientes abrumado/a la mayoría de días?","¿Sientes presión por las notas o el futuro?","¿Te cuesta disfrutar cosas que antes te gustaban?"],
+  familia: ["¿Sientes que en casa hay muchas peleas o discusiones?","¿Te cuesta hablar con tus padres o familiares?","¿Sientes que no te comprenden en tu casa?","¿Te sientes solo/a aunque estés con tu familia?","¿Los problemas en casa te afectan en el cole?","¿Hay falta de comunicación en tu casa?","¿Te sientes ignorado/a por tu familia?","¿No hay apoyo cuando lo necesitas?"],
+  autoestima: ["¿Te sientes seguro/a de ti mismo/a?","¿Crees que vales mucho como persona?","¿Te comparas mucho con los demás?","¿Te cuesta aceptar cumplidos?","¿Sientes que puedes lograr tus metas?","¿Sientes que tus opiniones importan?","¿Crees que mereces cosas buenas?","¿Crees en tus capacidades?"]
+};
+
+let puntaje = 0; let tipoTest = ""; let preguntaActual = 0; let totalPreguntas = 8;
+
+// ENTRAR
+function entrar() {
+  nombreUsuario = document.getElementById("apodo").value.trim();
+  edadUsuario = document.getElementById("edad").value.trim();
+  if(nombreUsuario === "" || edadUsuario === "") return alert("Por favor completa tu apodo y edad");
+
+  document.getElementById("inicio").classList.add("oculto");
+  document.getElementById("contenido").classList.remove("oculto");
+  document.getElementById("nombreUsuario").innerText = nombreUsuario;
+
+  if(!localStorage.getItem("entradas")) localStorage.setItem("entradas", JSON.stringify([]));
+}
+
+// PANEL SECRETO DEL PROFE - 5 CLICKS EN EL LOGO + CLAVE
+function contadorLogo() {
+  clicksLogo++;
+  if(clicksLogo >= 5) {
+    document.getElementById("inicio").classList.add("oculto");
+    document.getElementById("contenido").classList.add("oculto");
+    document.getElementById("panelProfe").classList.remove("oculto");
+    clicksLogo = 0;
+  }
+  setTimeout(()=>{clicksLogo=0}, 3000);
+}
+
+function verificarClave() {
+  let clave = document.getElementById("claveProfe").value.trim();
+  if(clave === CLAVE_SUPERVISORA) {
+    document.getElementById("zonaProfe").classList.remove("oculto");
+    document.getElementById("claveProfe").value = "";
+  } else {
+    alert("Clave incorrecta");
+  }
+}
+
+function salirProfe() {
+  document.getElementById("panelProfe").classList.add("oculto");
+  document.getElementById("zonaProfe").classList.add("oculto");
+  document.getElementById("inicio").classList.remove("oculto");
+}
+
+function volverMenu() {
+  document.getElementById("quiz").classList.add("oculto");
+  document.getElementById("menu").classList.remove("oculto");
+}
+
+// RESPUESTAS LARGAS E INTELIGENTES SEGÚN LO QUE ESCRIBAN
+function generarRespuestaInteligente(texto, nombre) {
+  texto = texto.toLowerCase();
+  
+  if(texto.includes("mal") || texto.includes("triste") || texto.includes("llorar") || texto.includes("deprimida")) {
+    return `Oh ${nombre} 💙 Te leo y siento que ahora mismo la estás pasando muy difícil. Primero quiero que sepas algo importante: lo que sientes es válido y no estás sola en esto. 
+    <br><br>Cuando nos sentimos así puede ayudar: 
+    <br>1. Respirar profundo 3 veces y tomar agua
+    <br>2. Escribir todo lo que sientes, como lo estás haciendo ahora
+    <br>3. Hablar con alguien de confianza: una amiga, tu mamá, o un profesor
+    <br><br>Tú eres fuerte ${nombre}. Esto que sientes hoy va a pasar. Mereces estar bien y voy a estar aquí para ti siempre que me necesites.`;
+  }
+  if(texto.includes("feo") || texto.includes("insultaron") || texto.includes("molestan") || texto.includes("bullying") || texto.includes("trataron mal")) {
+    return `${nombre}, lamento muchísimo que hayas tenido que pasar por eso 💜 Nadie merece ser tratado mal. Quiero que sepas 3 cosas:
+    <br><br>1. NO es tu culpa. Las personas que hacen daño tienen sus propios problemas.
+    <br>2. Tú eres valiosa, única y mereces respeto siempre.
+    <br>3. No tienes que cargarlo sola. Habla con un adulto de confianza hoy.
+    <br><br>Eres más fuerte de lo que crees ${nombre}. Y aquí estoy para recordártelo cada vez que lo necesites.`;
+  }
+  if(texto.includes("familia") || texto.includes("pelea") || texto.includes("gritan") || texto.includes("discuten")) {
+    return `Te entiendo ${nombre} 💚 Los problemas en casa son de las cosas más duras porque es donde deberíamos sentirnos más seguros. 
+    <br><br>Algo que te puede ayudar: busca un espacio solo para ti para calmarte. Puedes escuchar música, dibujar o salir a caminar. 
+    <br>Recuerda: los problemas de los adultos no son tu culpa. Tú solo tienes que enfocarte en cuidarte.
+    <br><br>Si las cosas se ponen muy difíciles, habla con un profesor o psicólogo del cole. Tú importas ${nombre} y mereces paz.`;
+  }
+  if(texto.includes("ansiedad") || texto.includes("nervios") || texto.includes("miedo") || texto.includes("preocupada")) {
+    return `${nombre}, respira conmigo ahora mismo 💙 Inhala 4 segundos... sostén 4 segundos... suelta 4 segundos. Repite 3 veces.
+    <br><br>La ansiedad miente. Te hace creer que algo malo va a pasar, pero tú has podido con todo hasta hoy. 
+    <br>Tips para calmarte: toma agua fría, nombra 5 cosas que ves, 4 que tocas, 3 que oyes.
+    <br><br>Estás a salvo aquí. Y cada día que enfrentas tus miedos te haces más fuerte. Confío en ti.`;
+  }
+  if(texto.includes("bien") || texto.includes("feliz") || texto.includes("contenta") || texto.includes("bien :)")) {
+    return `¡Aaaah ${nombre} me alegra el corazón leerte así! 💚✨
+    <br><br>Celebra este momento. Te lo mereces. Guarda esta sensación para los días difíciles.
+    <br>Recuerda qué fue lo que te hizo sentir así hoy e intenta repetirlo. Tú tienes el poder de crear días bonitos.
+    <br><br>Sigue brillando ${nombre}. Eres increíble.`;
+  }
+  
+  return `${nombre}, gracias por confiar en mí y contarme esto 💙 Te leí con mucha atención. 
+  <br><br>Lo que sientes importa. No tienes que tener todas las respuestas hoy. Solo respira.
+  <br>Estoy aquí para ti. Puedes volver a escribirme cuando quieras, ¿ya? No estás sola.`;
+}
+
+// CONSEJOS SEGÚN RESULTADO DEL TEST
+function generarConsejos(tipo, nivel, nombre) {
+  if(nivel === "bajo") {
+    return `¡Vas excelente ${nombre}! 💚 Sigue cuidando de ti. Tip: sigue haciendo lo que te hace bien y ayuda a tus amigas cuando las veas tristes.`;
+  }
+  if(nivel === "moderado") {
+    if(tipo === "ansiedad") return `${nombre}, es normal tener nervios a veces. Intenta: dormir 8h, hacer ejercicio 15 min, y hablar de tus miedos con alguien. Pequeños pasos 💙`;
+    if(tipo === "estres") return `${nombre}, tu cuerpo te está pidiendo una pausa. Organiza tus tareas, pide ayuda y date 10 min al día solo para ti. Te lo mereces.`;
+    if(tipo === "familia") return `${nombre}, hablar ayuda mucho. Busca 1 persona de tu familia con quien te sientas segura para contarle cómo te sientes.`;
+    if(tipo === "autoestima") return `${nombre}, empieza por decirte 1 cosa bonita al espejo cada mañana. Tú vales mucho y tienes talentos únicos.`;
+  }
+  if(nivel === "alto") {
+    return `${nombre}, sé que ahora mismo se siente muy pesado 💙 Pero no tienes que pasarlo sola. Por favor habla hoy con un adulto: tus papás, un profesor o el psicólogo. Tú eres importante y hay personas que quieren ayudarte. No te rindas.`;
+  }
+}
+
+function iniciarTest(tipo) {
+  tipoTest = tipo; puntaje = 0; preguntaActual = 0;
+  document.getElementById("menu").classList.add("oculto");
+  mostrarPregunta();
+}
+
+function mostrarPregunta() {
+  const quiz = document.getElementById("quiz");
+  quiz.classList.remove("oculto");
+  if(preguntaActual < totalPreguntas) {
+    quiz.innerHTML = `
+      <h3>Pregunta ${preguntaActual + 1} de ${totalPreguntas} - ${tipoTest.toUpperCase()}</h3>
+      <p><b>${preguntas[tipoTest][preguntaActual]}</b></p>
+      <div class="pregunta">
+        <label><input type="radio" name="respuesta" value="0"> Nunca / No</label>
+        <label><input type="radio" name="respuesta" value="1"> A veces</label>
+        <label><input type="radio" name="respuesta" value="2"> Casi siempre</label>
+        <label><input type="radio" name="respuesta" value="3"> Siempre / Sí</label>
+      </div>
+      <button onclick="siguiente()">Siguiente</button>`;
+  } else { mostrarResultado(); }
+}
+
+function siguiente() {
+  const respuesta = document.querySelector('input[name="respuesta"]:checked');
+  if(!respuesta) { alert("Marca una opción"); return; }
+  let valor = parseInt(respuesta.value);
+  if(tipoTest === "autoestima") valor = 3 - valor;
+  puntaje += valor; preguntaActual++; mostrarPregunta();
+}
+
+function mostrarResultado() {
+  let nivel = puntaje <= 8? "bajo" : puntaje <= 16? "moderado" : "alto";
+  let maxPuntaje = totalPreguntas * 3;
+  let consejos = generarConsejos(tipoTest, nivel, nombreUsuario);
+  let alertaExtra = "";
+
+  if(nivel === "alto") {
+    alertaExtra = `<div class="alerta"><b>${nombreUsuario}, tu bienestar es lo más importante 💙</b><br>
+    Por favor busca ayuda con un adulto de confianza. No tienes que pasar por esto sola.</div>`;
+  }
+
+  document.getElementById("quiz").innerHTML = `
+    <h3>${nombreUsuario}, tu resultado: ${tipoTest.toUpperCase()}</h3>
+    <p id="resultado">Nivel: ${nivel.toUpperCase()}</p>
+    ${alertaExtra}
+    <div class="consejo"><b>¿Cómo puedes mejorar?</b><br>${consejos}</div>
+    <p>Puntaje: ${puntaje} de ${maxPuntaje}</p>
+    <p><small>Recuerda: Esto es solo una guía. Si te sientes mal, busca apoyo profesional.</small></p>
+    <button onclick="volverMenu()">Volver al menú</button>`;
+}
+
+// CHAT
+function analizarTexto() {
+  const texto = document.getElementById("entrada").value.trim();
+  if(texto === "") return alert("Escribe algo primero");
+
+  let entradas = JSON.parse(localStorage.getItem("entradas"));
+  entradas.push({fecha: new Date().toLocaleString(), apodo: nombreUsuario, edad: edadUsuario, texto: texto});
+  localStorage.setItem("entradas", JSON.stringify(entradas));
+
+  let respuesta = generarRespuestaInteligente(texto, nombreUsuario);
+
+  document.getElementById("mensajeMotivador").innerHTML = `<div class="mensaje-seguro">${respuesta}</div>`;
+  document.getElementById("entrada").value = "";
+  document.getElementById("mensajeMotivador").scrollIntoView({behavior: "smooth"});
+}
+
+function buscarTexto() {
+  const busqueda = document.getElementById("buscar").value.toLowerCase();
+  let entradas = JSON.parse(localStorage.getItem("entradas"));
+  let resultados = entradas.filter(e => e.apodo === nombreUsuario && e.texto.toLowerCase().includes(busqueda));
+  let html = "<h4>Tus resultados:</h4>";
+  if(resultados.length === 0) html += "<p>No se encontró nada</p>";
+  resultados.forEach(e => { html += `<div class="entrada-card"><small>${e.fecha}</small><br>${e.texto}</div>`; });
+  document.getElementById("resultadosBusqueda").innerHTML = html;
+}
+
+// PARA EL PROFE
+function verTodasEntradas() {
+  let entradas = JSON.parse(localStorage.getItem("entradas"));
+  let html = "<h3>Todas las entradas guardadas:</h3>";
+  if(entradas.length === 0) html += "<p>Aún no hay entradas</p>";
+  entradas.forEach(e => { html += `<div class="entrada-card"><b>${e.apodo}</b> - ${e.edad} años - <small>${e.fecha}</small><br>${e.texto}</div>`; });
+  document.getElementById("todasEntradas").innerHTML = html;
+}
+
+function borrarTodo() {
+  if(confirm("¿Segura de borrar todo?")) {
+    localStorage.setItem("entradas", JSON.stringify([]));
+    alert("Borrado");
+    document.getElementById("todasEntradas").innerHTML = "";
+  }
+}
+</script>
+</body>
+</html>
